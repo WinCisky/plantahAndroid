@@ -1,0 +1,62 @@
+name: Android Build
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Install Gradle
+      - name: Install Gradle
+        uses: gradle/wrapper-validation@v4
+
+      # Install stuff
+      - name: Install stuff
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            unzip \
+            android-tools-sdk \
+            android-tools-sdk-linux \
+            lib32z1-dev \
+            libc6-dev-armhf-cross \
+            libc6-dev-i386-cross \
+            libc6-dev-arm64-cross \
+            libbz2-dev \
+            zlib1g-dev \
+            liblzma-dev \
+            lz4-dev \
+            libxml2-dev \
+            libncurses5-dev \
+            libssl-dev \
+            libffi-dev \
+            libcurl4-openssl-dev
+            libxrandr-dev \
+            libxcursor-dev \
+            libudev-dev \
+            libfreetype-dev \
+            libopenal-dev \
+            libflac-dev \
+            libvorbis-dev \
+            libgl1-mesa-dev \
+            libegl1-mesa-dev
+
+      # Set ANDROID_SDK_ROOT and ANDROID_HOME environment variables
+      - name: Set Android SDK paths
+        run: |
+          echo "ANDROID_SDK_ROOT=${ANDROID_HOME}" >> $GITHUB_ENV
+
+      # Build your project
+      - name: Print Gradle version
+        run: ./gradlew --version
+
+      # # Optional: Upload artifacts
+      # - name: Upload APK
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: my-app.apk
+      #     path: app/build/outputs/apk/debug/my-app.apk
