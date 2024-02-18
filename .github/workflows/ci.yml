@@ -49,9 +49,7 @@ jobs:
       - name: Print Android Sdk Version
         run: sdkmanager --version
 
-      - name: Get sfml 2.6
-        with:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+      - name: Get sfml 2.6.1
         run: |
           git clone https://github.com/SFML/SFML.git
           cd SFML
