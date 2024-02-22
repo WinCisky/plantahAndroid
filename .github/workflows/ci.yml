@@ -30,6 +30,9 @@ jobs:
             libgl1-mesa-dev \
             libegl1-mesa-dev
 
+      - name: Print cmake version
+        run: cmake --version
+
       - name: Install Gradle
         run: |
           wget -c https://services.gradle.org/distributions/gradle-8.5-bin.zip -P /tmp
@@ -50,10 +53,16 @@ jobs:
         run: sdkmanager --version
 
       - name: Get sfml 2.6.1
+      - name: Fist build to download dependencies
         run: |
           git clone https://github.com/SFML/SFML.git
           cd SFML
-          git checkout 2.6.1
+          cd examples/android
+          gradle build || true
+
+      - name: Build sfml for android
+        run: |
+          cd SFML
           mkdir build
           cd build
           mkdir x86_64
@@ -62,3 +71,4 @@ jobs:
           cmake -DANDROID_ABI=x86_64 -DANDROID_PLATFORM=android-21 -DCMAKE_CXX_FLAGS="-stdlib=libc++" -DCMAKE_TOOLCHAIN_FILE=${NDK_PATH}build/cmake/android.toolchain.cmake -DCMAKE_ANDROID_NDK_TOOLCHAIN_VERSION=clang -DCMAKE_SYSTEM_NAME=Android -DCMAKE_ANDROID_NDK=${NDK_PATH} -DCMAKE_ANDROID_STL_TYPE=c++_static -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" ../..
           make
           sudo make install
+      
