@@ -12,6 +12,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y \
+            build-essential \
             cmake \
             make \
             git \
@@ -30,9 +31,6 @@ jobs:
             libgl1-mesa-dev \
             libegl1-mesa-dev
 
-      - name: Print cmake version
-        run: cmake --version
-
       - name: Install Gradle
         run: |
           wget -c https://services.gradle.org/distributions/gradle-8.5-bin.zip -P /tmp
@@ -47,33 +45,34 @@ jobs:
         uses: android-actions/setup-android@v2
 
       - name: Install NDK
-        run: echo "y" | sdkmanager --install "ndk;21.0.6113669"
+        run: echo "y" | sdkmanager --install "ndk;26.1.10909125"
 
       - name: Print Android Sdk Version
         run: sdkmanager --version
 
-      - name: Get sfml 2.6.1
       - name: Fist build to download dependencies
         run: |
           git clone https://github.com/SFML/SFML.git
           cd SFML
-          cd examples/android
-          gradle build || true
-
-      - name: Install CMake
-        run: sudo apt-get install -y cmake
 
       - name: Build sfml for android
         run: |
           cd SFML
           mkdir build
           cd build
+          export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/26.1.10909125
           cmake .. \
             -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
             -DANDROID_ABI=arm64-v8a \
             -DANDROID_PLATFORM=android-30 \
             -DSFML_BUILD_ANDROID_EXAMPLES=TRUE \
             -DCMAKE_BUILD_TYPE=Release
-          cmake --build .
-          ls -R
+          cmake --build . -j 4
+          sudo cmake --install . --prefix /usr/local
+
+      - name: Build Android App
+        run: |
+          cd SFML/examples/android
+          git checkout master
+          gradle build
       
