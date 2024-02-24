@@ -17,8 +17,15 @@ jobs:
           unzip \
           wget \
           sdkmanager \
-          openjdk-17-jre-headless
-          # sdkmanager --licenses
+          openjdk-17-jre-headless \
+          ninja-build
+
+      - name: Accept Android Licenses
+        run: |
+          echo y | sdkmanager --licenses
+      
+      - name: Install Android SDK
+        run: |
           sdkmanager --install "ndk;26.1.10909125"
 
       - name: Checkout Code
