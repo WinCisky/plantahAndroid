@@ -30,11 +30,13 @@ jobs:
           sdkmanager --install "ndk;26.1.10909125"
 
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build SFML
         run: |
+          # use this for act
           # ./build-sfml.sh /opt/android-sdk/ndk/26.1.10909125
+          # use this for github actions
           ./build-sfml.sh /usr/local/lib/android/sdk/ndk/26.1.10909125
 
       - name: Install Gradle
@@ -54,3 +56,8 @@ jobs:
           cd ~/SFML/SFML/examples/android
           gradle build
       
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app
+          path: ~/SFML/SFML/examples/android/app/build/outputs/apk/debug/app-debug.apk
