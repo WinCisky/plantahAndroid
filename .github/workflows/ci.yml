@@ -23,6 +23,7 @@ jobs:
       - name: Accept Android Licenses
         run: |
           echo y | sdkmanager --licenses
+          echo y | sdkmanager --licenses
       
       - name: Install Android SDK
         run: |
@@ -33,7 +34,8 @@ jobs:
 
       - name: Build SFML
         run: |
-          ./build-sfml.sh /opt/android-sdk/ndk/26.1.10909125
+          # ./build-sfml.sh /opt/android-sdk/ndk/26.1.10909125
+          ./build-sfml.sh /usr/local/lib/android/sdk/ndk/26.1.10909125
 
       - name: Install Gradle
         run: |
