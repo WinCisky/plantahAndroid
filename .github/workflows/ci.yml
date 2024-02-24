@@ -31,14 +31,18 @@ jobs:
       - name: Export Android Home
         run: |
           # use this for act
-          # echo "ANDROID_HOME=/opt/android-sdk" >> $GITHUB_ENV
+          echo "ANDROID_HOME=/opt/android-sdk" >> $GITHUB_ENV
           # use this for github actions
-          echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> $GITHUB_ENV
+          # echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> $GITHUB_ENV
           echo "PATH=/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools:$PATH" >> $GITHUB_ENV
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - name: Build SFML
         run: |
-          git clone https://github.com/WinCisky/Build-SFML-For-Android-On-Linux
           cd Build-SFML-For-Android-On-Linux
           ./build-sfml.sh $ANDROID_HOME/ndk/26.1.10909125
 
@@ -51,11 +55,6 @@ jobs:
 
       - name: Build Android App
         run: |
-          cd ~/SFML/SFML/examples/android
+          cd android
           gradle build
       
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: app
-          path: ~/SFML/SFML/examples/android/app/build/outputs/apk/debug/app-debug.apk

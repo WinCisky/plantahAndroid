@@ -1,0 +1,3 @@
+[submodule "Build-SFML-For-Android-On-Linux"]
+	path = Build-SFML-For-Android-On-Linux
+	url = https://github.com/WinCisky/Build-SFML-For-Android-On-Linux.git
